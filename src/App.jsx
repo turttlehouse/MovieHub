@@ -5,6 +5,7 @@ import ContactPage from "./page/ContactPage";
 import Dashboard from "./page/admin/Dashboard";
 import MovieList from "./page/admin/MovieList";
 import Layout from "./layout/Layout";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <div>
+      <ToastContainer />
       <RouterProvider router={router} />
     </div>
   );
