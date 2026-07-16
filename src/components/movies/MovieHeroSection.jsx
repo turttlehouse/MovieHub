@@ -1,6 +1,13 @@
 import { Search } from "lucide-react";
 
-const MovieHeroSection = () => {
+const MovieHeroSection = (props) => {
+  const { setKeyword } = props;
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setKeyword(value);
+  };
+
   return (
     <section className="bg-linear-to-r from-blue-800 to-purple-900 text-white py-16">
       <div className="container mx-auto px-4 text-center">
@@ -14,6 +21,7 @@ const MovieHeroSection = () => {
         <div className="max-w-md mx-auto relative">
           <input
             type="text"
+            onChange={handleChange}
             placeholder="Search for movies..."
             className="w-full border px-4 py-3 rounded-full text-gray-800 focus:outline-none bg-white"
           />

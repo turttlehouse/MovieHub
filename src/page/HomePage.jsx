@@ -6,6 +6,10 @@ import Footer from "../components/global/Footer";
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
+  console.log(movies);
+
+  const [keyword, setKeyword] = useState("");
+  console.log(keyword);
 
   const fetchMovies = async () => {
     // fetch data from mock api server
@@ -26,12 +30,20 @@ const HomePage = () => {
     fetchMovies();
   }, []);
 
+  // toLowerCase()
+  // toUpperCase()
+  // includes()
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.name.toLowerCase().includes(keyword.toLowerCase()),
+  );
+
   return (
     <main>
       <Navbar />
-      <MovieHeroSection />
+      <MovieHeroSection setKeyword={setKeyword} />
       <div className="grid grid-cols-4 gap-4 p-4">
-        {movies?.map((movie) => {
+        {filteredMovies?.map((movie) => {
           return <MovieCard movie={movie} />;
         })}
       </div>

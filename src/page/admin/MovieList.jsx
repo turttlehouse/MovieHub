@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AddMovieForm from "./AddMovieForm";
+import { toast } from "react-toastify";
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
   const [openForm, setOpenForm] = useState(false);
-
-  
 
   //   server bata data leune
   const fetchMovies = async () => {
@@ -26,21 +25,53 @@ const MovieList = () => {
     // console.log('add movie btn clicked')
     setOpenForm(true);
   };
-  
 
-  
+  const handleClose = () => {
+    setOpenForm(false);
+  };
 
-  // console.log(formData)
-  // async,await => asynchronous operation ?
-  // yedi kunai operation execute huna / complete huna time lagxa vane
-  // for eg server lai data dinu , server bata data fetch
-  // file bata data read
+  console.log(movies)
 
-  // fetch()  vs axios
-  // 2xxx => success
-  // 5xxx => failure server error
+  // [
+  //   {
+  //     name: 'Jaari',
+  //     poster: 
+  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSJxsAltHtgJleSohbhSaeR7mlVYUkKjF71a6Ask0t3Q&s=10',
+  //     rating: '3',
+  //     genre: 'Love',
+  //     id: '2'
+  //   },
+  //   {
+  //     name: 'Inception',
+  //     poster: 
+  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4vKxwTnWVEAuj_xXaj0h8kWUdUxM2cXJBm2XiLA-JNg&s=10',
+  //     rating: '2',
+  //     genre: 'Sci-fi',
+  //     id: '3'
+  //   },
+  //   {
+  //     name: 'Tricker Treat',
+  //     poster: 
+  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_S8iexXCT1vlBIPi-82w377mYQTHnJxGeDJpqKbB2Q&s=10',
+  //     rating: '1',
+  //     genre: 'Horror',
+  //     id: '4'
+  //   }
+  // ]
 
-  
+  const handleDelete = async (id) => {
+    console.log(id);
+
+    const response = await axios.delete(
+      "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies/" + id,
+    );
+    if (response.status === 200) {
+      setMovies((previousValue) =>
+        previousValue.filter((prev) => prev.id !== id),
+      );
+      toast("Movie has been deleted successfully");
+    }
+  };
 
   return (
     <div>
@@ -53,7 +84,7 @@ const MovieList = () => {
 
       {/* form ui */}
       {openForm === true ? (
-        <AddMovieForm/>
+        <AddMovieForm handleClose={handleClose} setMovies={setMovies} />
       ) : (
         <span></span>
       )}
@@ -123,9 +154,12 @@ const MovieList = () => {
                   <a href="#" className="text-indigo-600 hover:text-indigo-900">
                     Edit
                   </a>
-                  <a href="#" className="ml-2 text-red-600 hover:text-red-900">
+                  <button
+                    onClick={() => handleDelete(movie.id)}
+                    className="ml-2 text-red-600 hover:text-red-900"
+                  >
                     Delete
-                  </a>
+                  </button>
                 </td>
               </tr>
             );
