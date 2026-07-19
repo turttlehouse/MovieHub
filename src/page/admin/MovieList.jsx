@@ -1,67 +1,21 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AddMovieForm from "./AddMovieForm";
 import { toast } from "react-toastify";
+import { MovieContext } from "../../context/MovieContext";
 
 const MovieList = () => {
-  const [movies, setMovies] = useState([]);
+  const { movies,setMovies } = useContext(MovieContext);
   const [openForm, setOpenForm] = useState(false);
-
-  //   server bata data leune
-  const fetchMovies = async () => {
-    const response = await axios.get(
-      "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
-    );
-    setMovies(response.data);
-  };
-
-  useEffect(() => {
-    // yo logic user first choti page ma auda run hunxa
-
-    fetchMovies();
-  }, []);
-
   const handleOpen = () => {
-    // console.log('add movie btn clicked')
+    setSelectedMovie(null);
     setOpenForm(true);
   };
-
   const handleClose = () => {
     setOpenForm(false);
   };
 
-  console.log(movies)
-
-  // [
-  //   {
-  //     name: 'Jaari',
-  //     poster: 
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSJxsAltHtgJleSohbhSaeR7mlVYUkKjF71a6Ask0t3Q&s=10',
-  //     rating: '3',
-  //     genre: 'Love',
-  //     id: '2'
-  //   },
-  //   {
-  //     name: 'Inception',
-  //     poster: 
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4vKxwTnWVEAuj_xXaj0h8kWUdUxM2cXJBm2XiLA-JNg&s=10',
-  //     rating: '2',
-  //     genre: 'Sci-fi',
-  //     id: '3'
-  //   },
-  //   {
-  //     name: 'Tricker Treat',
-  //     poster: 
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_S8iexXCT1vlBIPi-82w377mYQTHnJxGeDJpqKbB2Q&s=10',
-  //     rating: '1',
-  //     genre: 'Horror',
-  //     id: '4'
-  //   }
-  // ]
-
   const handleDelete = async (id) => {
-    console.log(id);
-
     const response = await axios.delete(
       "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies/" + id,
     );
@@ -71,6 +25,12 @@ const MovieList = () => {
       );
       toast("Movie has been deleted successfully");
     }
+  };
+  
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const handleEdit = (movie) => {
+    setSelectedMovie(movie);
+    setOpenForm(true);
   };
 
   return (
@@ -84,7 +44,11 @@ const MovieList = () => {
 
       {/* form ui */}
       {openForm === true ? (
-        <AddMovieForm handleClose={handleClose} setMovies={setMovies} />
+        <AddMovieForm
+          selectedMovie={selectedMovie}
+          handleClose={handleClose}
+          setMovies={setMovies}
+        />
       ) : (
         <span></span>
       )}
@@ -151,9 +115,14 @@ const MovieList = () => {
                   {movie.genre}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap  text-sm font-medium">
-                  <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                  <button
+                    // onClick={handleEdit}
+                    onClick={() => handleEdit(movie)}
+                    href="#"
+                    className="text-indigo-600 hover:text-indigo-900"
+                  >
                     Edit
-                  </a>
+                  </button>
                   <button
                     onClick={() => handleDelete(movie.id)}
                     className="ml-2 text-red-600 hover:text-red-900"

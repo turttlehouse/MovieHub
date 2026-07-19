@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const AddMovieForm = (props) => {
-  const { handleClose,setMovies } = props;
-
+  const { handleClose, setMovies, selectedMovie } = props;
   const [formData, setFormData] = useState({
     name: "",
     poster: "",
@@ -12,10 +11,13 @@ const AddMovieForm = (props) => {
     genre: "",
   });
 
-  const handleChange = (event) => {
-    console.log("trigger");
-    console.log(event.target.value);
+  useEffect(() => {
+    if (selectedMovie) {
+      setFormData(selectedMovie);
+    }
+  }, [selectedMovie]);
 
+  const handleChange = (event) => {
     const { name, value } = event.target;
 
     setFormData((previousValue) => ({
@@ -24,29 +26,59 @@ const AddMovieForm = (props) => {
     }));
   };
 
-  console.log(formData);
+  const [loading, setLoading] = useState(false);
+  // 
+  console.log(loading)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("trigger");
+    setLoading(true);
+    try {
+      if (selectedMovie) {
+        // put request hanxu - axios
+        const response = await axios.put(
+          "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies/" +
+            selectedMovie.id,
+          formData,
+        );
+        if (response.status === 200) {
+          toast("movie has been updated successfully");
 
-    const response = await axios.post(
-      "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
-      formData,
-    );
-    console.log(response)
+          setMovies((previousMovies) =>
+            previousMovies.map((movie) =>
+              movie.id === response.data.id ? response.data : movie,
+            ),
+          );
 
-    if (response.status === 201) {
-      console.log("movie added successfully");
-      toast("Movie has been added successfully");
-      setMovies((previousMovie)=>[...previousMovie,response.data])
-      handleClose();
-      setFormData({
-        name: "",
-        poster: "",
-        rating: "",
-        genre: "",
-      });
+          handleClose();
+        }
+      } else {
+        // post request hanxu
+        const response = await axios.post(
+          "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
+          formData,
+        );
+        console.log(response);
+
+        if (response.status === 201) {
+          console.log("movie added successfully");
+          toast("Movie has been added successfully");
+          setMovies((previousMovie) => [...previousMovie, response.data]);
+          handleClose();
+          setFormData({
+            name: "",
+            poster: "",
+            rating: "",
+            genre: "",
+          });
+        }
+      }
+    } catch (error) {
+      const errorMessage = error.response.data;
+      toast(errorMessage)
+      
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,6 +131,7 @@ const AddMovieForm = (props) => {
                   <input
                     id="name"
                     name="name"
+                    value={formData.name}
                     onChange={handleChange}
                     className="border p-3 shadow-md  border-gray-700 placeholder:text-base focus:outline-none ease-in-out duration-300 rounded-lg w-full"
                     type="text"
@@ -119,6 +152,7 @@ const AddMovieForm = (props) => {
                     type="text"
                     placeholder="enter movie poster url..."
                     name="poster"
+                    value={formData.poster}
                     onChange={handleChange}
                     required
                   />
@@ -138,6 +172,7 @@ const AddMovieForm = (props) => {
                     className="border p-3  border-gray-700 shadow-md placeholder:text-base focus:outline-none ease-in-out duration-300 rounded-lg w-full"
                     type="text"
                     name="genre"
+                    value={formData.genre}
                     onChange={handleChange}
                     placeholder="enter movie genre"
                     required
@@ -158,6 +193,7 @@ const AddMovieForm = (props) => {
                     className="border p-3  border-gray-700 shadow-md placeholder:text-base focus:outline-none ease-in-out duration-300 rounded-lg w-full"
                     type="text"
                     name="rating"
+                    value={formData.rating}
                     onChange={handleChange}
                     placeholder="enter movie rating."
                     required
@@ -178,10 +214,11 @@ const AddMovieForm = (props) => {
 
                     <button
                       type="submit"
+                      disabled={loading}
                       className="inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-white shadow focus:ring-white border-transparent bg-[#4d1b80] hover:bg-[#7127BA] focus:bg-[#11071F] focus:ring-offset-[#11071F]"
                     >
                       <span className="flex items-center gap-1">
-                        <span className="">Send</span>
+                        <span className="">{loading ? 'sending..' : 'send'}</span>
                       </span>
                     </button>
                   </div>
