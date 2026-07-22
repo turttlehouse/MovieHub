@@ -37,8 +37,8 @@ const AddMovieForm = (props) => {
       if (selectedMovie) {
         // put request hanxu - axios
         const response = await axios.put(
-          "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies/" +
-            selectedMovie.id,
+          "http://localhost:5000/movies/" +
+            selectedMovie._id,
           formData,
         );
         if (response.status === 200) {

@@ -10,10 +10,12 @@ export function MovieProvider({ children }) {
 
   const fetchMovies = async () => {
     const response = await axios.get(
-      "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
+      "http://localhost:5000/movies",
+      // "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
     );
+   
     if (response.status === 200) {
-      setMovies(response.data);
+      setMovies(response.data.data);
     }
   };
 
