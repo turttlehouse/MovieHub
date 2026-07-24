@@ -3,9 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import AddMovieForm from "./AddMovieForm";
 import { toast } from "react-toastify";
 import { MovieContext } from "../../context/MovieContext";
+import { apiUrl } from "../../constant/constant";
 
 const MovieList = () => {
-  const { movies,setMovies } = useContext(MovieContext);
+  const { movies, setMovies } = useContext(MovieContext);
   console.log(movies);
   const [openForm, setOpenForm] = useState(false);
   const handleOpen = () => {
@@ -18,7 +19,8 @@ const MovieList = () => {
 
   const handleDelete = async (id) => {
     const response = await axios.delete(
-      "http://localhost:5000/movies/" + id,
+      // "http://localhost:5000/movies/" + id,
+      `${apiUrl}/movies/` + id,
     );
     if (response.status === 200) {
       setMovies((previousValue) =>
@@ -27,7 +29,7 @@ const MovieList = () => {
       toast("Movie has been deleted successfully");
     }
   };
-  
+
   const [selectedMovie, setSelectedMovie] = useState(null);
   const handleEdit = (movie) => {
     setSelectedMovie(movie);

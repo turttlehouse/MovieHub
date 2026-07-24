@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import { apiUrl } from "../constant/constant";
 
 // step 1 : create context
 export const MovieContext = createContext();
@@ -10,7 +11,9 @@ export function MovieProvider({ children }) {
 
   const fetchMovies = async () => {
     const response = await axios.get(
-      "http://localhost:5000/movies",
+      // "apiUrl/movies",
+      `${apiUrl}/movies`
+      // "http://localhost:5000/movies",
       // "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
     );
    

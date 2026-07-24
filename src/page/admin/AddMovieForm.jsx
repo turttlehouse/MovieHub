@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { apiUrl } from "../../constant/constant";
 
 const AddMovieForm = (props) => {
   const { handleClose, setMovies, selectedMovie } = props;
@@ -37,7 +38,8 @@ const AddMovieForm = (props) => {
       if (selectedMovie) {
         // put request hanxu - axios
         const response = await axios.put(
-          "http://localhost:5000/movies/" +
+          // "http://localhost:5000/movies/" +
+          `${apiUrl}/movies/` +
             selectedMovie._id,
           formData,
         );
@@ -55,7 +57,8 @@ const AddMovieForm = (props) => {
       } else {
         // post request hanxu
         const response = await axios.post(
-          "http://localhost:5000/movies",
+          // "http://localhost:5000/movies",
+          `${apiUrl}/movies`,
           formData,
         );
         console.log(response.data)
