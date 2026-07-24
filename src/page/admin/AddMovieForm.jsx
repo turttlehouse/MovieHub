@@ -55,15 +55,17 @@ const AddMovieForm = (props) => {
       } else {
         // post request hanxu
         const response = await axios.post(
-          "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies",
+          "http://localhost:5000/movies",
           formData,
         );
-        console.log(response);
+        console.log(response.data)
 
         if (response.status === 201) {
-          console.log("movie added successfully");
           toast("Movie has been added successfully");
-          setMovies((previousMovie) => [...previousMovie, response.data]);
+
+          // local state ma jodiraxu server bata ako valeu
+          setMovies((previousMovie) => [...previousMovie, response.data.data]);
+
           handleClose();
           setFormData({
             name: "",

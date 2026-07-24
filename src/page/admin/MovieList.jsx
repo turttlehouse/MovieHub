@@ -6,6 +6,7 @@ import { MovieContext } from "../../context/MovieContext";
 
 const MovieList = () => {
   const { movies,setMovies } = useContext(MovieContext);
+  console.log(movies);
   const [openForm, setOpenForm] = useState(false);
   const handleOpen = () => {
     setSelectedMovie(null);
@@ -17,11 +18,11 @@ const MovieList = () => {
 
   const handleDelete = async (id) => {
     const response = await axios.delete(
-      "https://6a543ea98547b9f7111c0a2d.mockapi.io/movies/" + id,
+      "http://localhost:5000/movies/" + id,
     );
     if (response.status === 200) {
       setMovies((previousValue) =>
-        previousValue.filter((prev) => prev.id !== id),
+        previousValue.filter((prev) => prev._id !== id),
       );
       toast("Movie has been deleted successfully");
     }
@@ -124,7 +125,7 @@ const MovieList = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(movie.id)}
+                    onClick={() => handleDelete(movie._id)}
                     className="ml-2 text-red-600 hover:text-red-900"
                   >
                     Delete
